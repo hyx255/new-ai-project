@@ -1,0 +1,31 @@
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Logs
+*.log
+logs/
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+
+# Build and cache outputs
+dist/
+build/
+out/
+coverage/
+.cache/
+.tmp/
+tmp/
+
+# Dependencies - add language-specific entries after the stack is chosen.
+
+# Generated artifacts - document before adding project-specific generated paths.
