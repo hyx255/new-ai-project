@@ -6,18 +6,22 @@ database
 
 ## 描述
 
-负责持久化相关变更的设计和验证，包括数据模型、Migration、Repository、索引、事务、一致性和数据库测试。
+负责持久化相关变更的设计和验证点定义，包括数据模型、Migration 设计、Repository 边界、索引、事务、一致性要求和数据库相关测试点。
+
+本 Skill 不负责完整测试执行。最终测试执行由 `skills/testing/SKILL.md` 负责。
 
 ## 适用场景
 
 - 需求需要持久化数据。
 - 需要创建或修改数据模型、Migration、Repository 或查询。
 - 需要审查索引、事务或一致性规则。
-- 需要数据库测试或 Migration 验证。
+- 需要数据库相关测试点或 Migration 验证点。
 
 ## 输入
 
 - 已批准的产品需求或模块需求。
+- `docs/modules/spec-template.md`。
+- `docs/modules/design-template.md`。
 - 相关模块设计文档。
 - 数据库相关 ADR。
 - 现有 Schema 和 Migration 历史，如有。
@@ -36,7 +40,7 @@ database
 4. 设计 Migration，并在支持时考虑前进和回滚路径。
 5. 定义 Repository 或数据访问边界，避免存储细节泄漏到业务逻辑。
 6. 基于预期查询模式评估索引。
-7. 规划 Migration、约束、事务和数据访问行为的测试。
+7. 规划 Migration、约束、事务和数据访问行为的数据库测试点。
 8. 文档化数据模型决策和风险。
 
 ## 检查项
@@ -46,15 +50,15 @@ database
 - 约束能够保护数据完整性。
 - 事务边界明确。
 - 索引由查询模式支撑。
-- 测试覆盖 Migration 和数据访问行为。
+- 数据库测试点覆盖 Migration 和数据访问行为。
 
 ## 输出
 
 - 数据模型设计。
 - 当技术栈存在时，输出 Migration 计划或 Migration 文件。
 - Repository/数据访问计划。
-- 数据库测试计划或测试。
-- 待确认问题和风险。
+- 数据库相关测试点。
+- Open Questions 和风险。
 
 ## Definition of Done
 
@@ -62,7 +66,7 @@ database
 - Schema 或概念模型与需求一致。
 - Migration 方法已验证，或明确标记为 TBD。
 - 已处理数据完整性和事务风险。
-- 已记录测试或验证步骤。
+- 已记录数据库测试点或验证步骤。
 
 ## 失败处理
 

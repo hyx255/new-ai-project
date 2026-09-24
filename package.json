@@ -1,0 +1,25 @@
+{
+  "name": "new-ai-project",
+  "version": "1.0.0",
+  "description": "本仓库是一个 AI 原生软件项目的起点。",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs",
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hyx255/new-ai-project.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/hyx255/new-ai-project/issues"
+  },
+  "homepage": "https://github.com/hyx255/new-ai-project#readme"
+}

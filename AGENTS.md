@@ -1,66 +1,120 @@
-# AI Agent 项目指南
+﻿# AI Agent 项目指南
 
-## 项目说明
+## 项目
 
-本仓库是一个 AI 原生软件项目的基础工程。
+智能广播设备管理与运维平台 —— AI 原生工程项目。
 
-项目当前仅处于基础设施初始化阶段。业务领域、应用框架、数据库、部署平台和云厂商均尚未选择。
+## 技术栈
 
-## Agent 工作原则
+- Backend: Go + Gin
+- Frontend: Vue 3 + TypeScript + Vite
+- Database: MySQL/GreatDB (生产) + SQLite (开发)
+- 架构: Modular Monolith
 
-- Human 负责需求、架构方向、关键决策和最终验收。
-- 在上下文充分时，AI Agent 负责需求分析、任务拆解、实现、测试、评审、构建、测试环境部署和验证。
-- 不臆造业务需求、业务模块、数据模型、API 或部署目标。
-- 优先做小而可回退的变更，并提供清晰的验证证据。
-- 全局项目规则放在本文件，业务知识放在 `docs/`，可复用工作流放在 `skills/`。
+## 目录结构
 
-## 仓库结构
+```
+.
+├── cmd/server/              # 应用入口
+├── internal/
+│   ├── modules/             # 业务模块
+│   ├── bootstrap/           # 启动编排
+│   └── platform/            # 基础设施
+├── web/                     # 前端应用
+├── docs/
+│   ├── requirements/        # 业务需求
+│   ├── decisions/           # 架构决策（ADR）
+│   ├── architecture/        # 架构说明
+│   └── archive/             # 历史文档
+└── skills/                  # AI 开发能力
+```
 
-- `README.md`：项目入口和工作方式说明。
-- `ARCHITECTURE.md`：当前架构模板和待定事项。
-- `docs/product/`：产品需求、用户故事和验收标准。
-- `docs/architecture/`：架构说明、工程规范、API/数据库约定。
-- `docs/modules/`：模块级规格、设计、API 和验收文档。
-- `docs/decisions/`：架构决策记录。
-- `skills/`：可复用的 AI Agent 工作流。
-- `scripts/`：项目自动化脚本，仅在确有需要时添加。
-- `tests/`：单元测试、集成测试和端到端测试目录。
+**业务模块内部结构**:
 
-## 核心开发规则
+```
+internal/modules/<module>/
+├── api/           # HTTP handler、DTO、路由
+├── service/       # 业务逻辑
+├── repository/    # 数据持久化
+├── gateway/       # 设备能力接口定义
+├── adapter/       # 协议/传输实现
+└── model/         # 业务实体
+```
 
-- 在产品需求和实现计划明确之前，不添加业务代码。
-- 未形成明确决策记录前，不引入框架、数据库、队列、缓存、容器平台或云服务依赖。
-- 保持文档与代码一致；行为变化时，同步更新相关文档。
-- 测试必须验证预期行为，而不是仅固化当前实现。
-- Code Review 不得为了让测试通过而修改测试预期。
-- 每个有意义的变更都应包含验证步骤；如果暂时无法验证，必须说明原因。
+## 架构原则
 
-## Skill 索引
+1. **Modular Monolith**: 业务模块是一级组织单位
+2. **Defense in Depth**: Tool → Service → Model，每层独立校验
+3. **Device Abstraction**: Service → Gateway → Adapter → Transport
+4. **Operation/Execution**: Operation = 业务意图, Execution = 设备执行单元
+5. **Audit**: Append-only，独立于 Operation/Execution
 
-- `skills/project-management/SKILL.md`：需求分析、任务拆解、计划制定和范围控制。
-- `skills/api-development/SKILL.md`：API 设计、参数校验、错误处理、接口文档和 API 测试。
-- `skills/database/SKILL.md`：数据建模、迁移、Repository、事务、一致性和数据库测试。
-- `skills/testing/SKILL.md`：单元测试、集成测试、端到端测试、回归测试和失败分析。
-- `skills/code-review/SKILL.md`：架构、质量、安全、可靠性、性能和测试覆盖检查。
-- `skills/release/SKILL.md`：format、lint、test、build、artifact、staging、health check 和 release。
+详见: `ARCHITECTURE.md`, `docs/decisions/ADR-001~006`
+
+## 开发原则
+
+- **不臆造**: 不创造未定义的需求、API、数据模型
+- **小步快跑**: 优先做小变更，提供验证证据
+- **文档一致**: 行为变化时同步更新文档
+- **测试真实**: 测试验证预期行为，不是固化实现
+- **Code Review**: 不为让测试通过而修改测试预期
+
+## Skill 使用
+
+Skill 描述"怎么做"。开发时按需调用：
+
+- `feature-development`: 新功能开发
+- `api-development`: API 设计与实现
+- `bug-fix`: Bug 修复
+- `database`: 数据库设计与迁移
+- `testing`: 测试策略与执行
+- `code-review`: 代码审查
+- `release`: 发布准备
+
+详见: `skills/*/SKILL.md`
+
+## 测试要求
+
+- Unit Test: SQLite/内存，快速验证
+- Integration Test: MySQL，验证真实行为
+- Adapter Contract Test: 验证 Gateway 实现
+- E2E Test: 完整业务流程
+- Agent Tool Test: 验证 Defense in Depth
+
+详见: `docs/decisions/ADR-006-testing-strategy.md`
+
+## 禁止事项
+
+- 不修改未批准的技术栈/数据库/部署平台
+- 不创建/修改公开 API 契约（除非已批准）
+- 不创建/修改数据模型或迁移（除非已批准）
+- 不在测试预期与需求不一致时修改测试
+- 不引入未经批准的依赖
+
+## 停止并询问
+
+遇到以下情况必须停止并询问用户：
+
+- 需求缺失或歧义影响系统行为
+- 需要选择新技术栈/数据库/部署平台
+- 变更会影响公开 API 或数据模型（未批准）
+- 测试预期与需求不一致
+- 用户请求与已记录决策冲突
+
+## 文档入口
+
+- **项目规则**: `AGENTS.md`（本文件）
+- **架构**: `ARCHITECTURE.md`
+- **需求**: `docs/requirements/device.md`
+- **决策**: `docs/decisions/`
+- **能力**: `skills/`
 
 ## Definition of Done
 
-任务只有在满足以下条件时才算完成：
+任务完成条件：
 
-- 范围清晰，并且与已批准的需求或指令一致。
-- 实现、文档和测试保持一致。
-- 已执行相关验证，并记录结果。
-- 已记录已知风险、限制和 TBD 项。
-- 未引入未经批准的技术假设或业务假设。
-
-## 必须停止并询问用户的情况
-
-Agent 遇到以下情况时必须停止并向用户确认：
-
-- 业务需求缺失或存在歧义，并且会影响系统行为。
-- 必须选择新的技术栈、数据库、部署平台或外部服务。
-- 变更会创建或修改公开 API 契约，但尚未获得批准。
-- 变更会创建或修改持久化数据模型或迁移，但尚未获得批准。
-- 测试预期与已批准需求不一致。
-- 用户请求与现有文档化决策冲突。
+- 范围清晰，与需求/指令一致
+- 实现、文档、测试一致
+- 已验证并记录结果
+- 已记录风险、限制、TBD
+- 未引入未批准的技术/业务假设

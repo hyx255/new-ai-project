@@ -6,11 +6,14 @@ release
 
 ## 描述
 
-负责执行和验证发布路径，包括 format、lint、test、build、artifact、staging、health check 和 release validation。
+负责 Release Readiness 检查，包括 Requirement、Implementation、Test、Review、Build、Staging、Health Check、E2E 和 Release。
+
+在技术栈确定之前，本 Skill 不绑定 Docker、Kubernetes、云厂商或具体命令。
 
 ## 适用场景
 
 - 变更已准备进入发布前验证。
+- 需要确认发布准备度。
 - 需要生成构建产物。
 - 需要测试环境部署或健康检查。
 - 需要发布检查清单。
@@ -18,31 +21,37 @@ release
 ## 输入
 
 - 已批准的发布范围。
-- 构建、测试和部署说明。
-- 与运行时和部署目标相关的 ADR。
-- 经批准的环境变量、凭据和访问说明。
+- Requirement。
+- Implementation Plan。
+- Test Report。
+- Code Review Report。
+- 构建、测试和部署说明，如已存在。
+- 与运行时和部署目标相关的 ADR，如已存在。
+- 经批准的环境变量、凭据和访问说明，如已存在。
 
 ## 前置条件
 
-- 已存在可部署应用。
-- 必需的 format、lint、test、build 和部署命令已文档化。
-- 部署目标和产物策略已批准。
-- 凭据和环境访问可通过已批准渠道获得。
+- Requirement 已明确。
+- Implementation 已完成。
+- Test Report 已产出。
+- Code Review Final Status 为 APPROVED。
+- 如需实际发布，可部署应用、构建命令、部署目标、产物策略和凭据必须已批准。
 
 ## 执行步骤
 
-1. 确认发布范围和目标环境。
-2. 运行格式化检查。
-3. 运行 lint 或静态检查。
-4. 运行相关测试。
-5. 构建产物。
-6. 记录产物标识和构建元数据。
-7. 如果测试环境存在且已批准，则部署到测试环境。
-8. 运行健康检查和冒烟验证。
-9. 记录结果、风险和回滚说明。
+1. 确认 Requirement 已明确且与实现一致。
+2. 确认 Implementation 已完成且无未解决 BLOCKED 项。
+3. 确认 Test Report 已完成且 Final Result 可接受。
+4. 确认 Code Review Final Status 为 APPROVED。
+5. 如项目已有构建命令，执行 Build；否则记录为 TBD。
+6. 如 Staging 环境已批准，部署到 Staging；否则记录为 TBD。
+7. 如 Health Check 已定义，执行 Health Check；否则记录为 TBD。
+8. 如 E2E 已定义，执行 E2E；否则记录为 TBD。
+9. 记录 Release Readiness 结果、风险和回滚说明。
 
 ## 检查项
 
+- Requirement、Implementation、Test、Review、Build、Staging、Health Check、E2E、Release 链路状态清晰。
 - 发布命令与项目文档一致。
 - 除非存在已批准例外，否则测试必须在部署前通过。
 - 构建产物可追踪。
@@ -51,23 +60,25 @@ release
 
 ## 输出
 
-- 发布检查清单结果。
-- 构建和产物摘要。
+- Release Readiness checklist result。
+- 构建和产物摘要，如适用。
 - 测试环境部署结果，如适用。
-- 健康检查和冒烟验证结果。
+- 健康检查和 E2E 验证结果，如适用。
 - 已知风险和回滚说明。
 
 ## Definition of Done
 
 - 必需检查已通过，或已记录批准例外。
-- 构建产物可追踪。
+- 构建产物可追踪，如适用。
 - 当测试环境存在时，已验证环境健康。
 - 已记录发布风险和回滚说明。
+- 未引入未经批准的平台或云厂商假设。
 
 ## 失败处理
 
+- 如果 Requirement、Test Report 或 Code Review 缺失，停止 Release Readiness 并报告缺失项。
 - 如果 format、lint、测试或构建失败，停止发布并报告失败步骤。
-- 如果部署目标未定义，只产出发布准备度检查清单。
+- 如果部署目标未定义，只产出 Release Readiness checklist。
 - 如果缺少凭据或环境访问，记录阻塞项，不臆造绕过方案。
 
 ## 必须停止并询问用户的情况

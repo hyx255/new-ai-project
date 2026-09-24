@@ -1,0 +1,51 @@
+﻿# Broadcast Platform Configuration
+
+server:
+  host: "0.0.0.0"
+  port: 8080
+  env: "development"  # development, production, test
+  shutdown_timeout: 10s
+
+database:
+  driver: "sqlite3"  # sqlite3, mysql
+  dsn: "file:broadcast.db?cache=shared&mode=rwc"
+  max_open_conns: 25
+  max_idle_conns: 5
+  conn_max_lifetime_seconds: 300
+
+logging:
+  level: "info"  # debug, info, warn, error, fatal
+  format: "console"  # json, console
+
+metrics:
+  enabled: true
+  path: "/metrics"
+
+cache:
+  enabled: false  # Redis disabled per ADR-003 conditional introduction
+  driver: "noop"
+  dsn: ""
+
+cors:
+  allow_origins:
+    - "*"
+  allow_methods:
+    - "GET"
+    - "POST"
+    - "PUT"
+    - "DELETE"
+    - "OPTIONS"
+  allow_headers:
+    - "Origin"
+    - "Content-Type"
+    - "Authorization"
+    - "X-Request-ID"
+    - "X-Trace-ID"
+
+tracing:
+  enabled: true
+
+execution:
+  max_workers: 10          # max concurrent device executions
+  max_batch_size: 100      # max devices per batch operation
+  shutdown_timeout_sec: 30  # seconds to wait for in-flight ops on shutdown
